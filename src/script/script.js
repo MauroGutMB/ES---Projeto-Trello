@@ -29,7 +29,7 @@ function loadData() {
         cardDataStore.forEach((value, key) => {
             const column = document.querySelector(`.kanban-column[data-id="${value.columnId}"] .kanban-cards`);
             if (column) {
-                createCardElement(column, key, value.title, value.priority, value.comments, value.attachments);
+                createCardElement(column, key, value.title, value.priority, value.comments, value.attachments, value.deadline);
             }
         });
     }
@@ -60,7 +60,7 @@ let currentOpenCardId = null;
 let cardToDeleteId = null;
 
 // --- Funções Auxiliares de Renderização de Card ---
-function createCardElement(container, id, title, priority, comments = [], attachments = []) {
+function createCardElement(container, id, title, priority, comments = [], attachments = [], deadline = null) {
     const card = document.createElement('div');
     card.classList.add('kanban-card');
     
@@ -83,12 +83,24 @@ function createCardElement(container, id, title, priority, comments = [], attach
     // Botão de deletar só aparece se não for professor
     const deleteButtonHtml = isReadOnly ? '' : `<button class="btn-delete" title="Excluir card"><i class="fa-solid fa-trash"></i></button>`;
 
+    let deadlineHtml = '';
+    if (deadline) {
+        const dateParts = deadline.split('-');
+        if (dateParts.length === 3) {
+             const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+             deadlineHtml = `<div title="Prazo de entrega" style="font-size: 11px; color: #555; margin-bottom: 8px; display: flex; align-items: center; gap: 4px;">
+                <i class="fa-regular fa-clock"></i> ${formattedDate}
+            </div>`;
+        }
+    }
+
     card.innerHTML = `
         <div class="card-header">
             <div class="badge ${badgeClass}"><span>${badgeText}</span></div>
             ${deleteButtonHtml}
         </div>
         <p class="card-title">${title}</p>
+        ${deadlineHtml}
         <div class="card-infos">
             <div class="card-icons">
                 <p class="icon-comment"><i class="fa-regular fa-comment"></i> <span class="count-comments">${comments.length}</span></p>
@@ -208,6 +220,23 @@ function closeModal() {
 function renderModalContent() {
     const data = cardDataStore.get(currentOpenCardId);
     if (!data) return;
+
+    // Renderiza Prazo
+    const deadlineEl = document.getElementById('modal-card-deadline');
+    if (deadlineEl) {
+        if (data.deadline) {
+            const dateParts = data.deadline.split('-');
+            if (dateParts.length === 3) {
+                const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+                deadlineEl.innerHTML = `<i class="fa-regular fa-clock"></i> Prazo: ${formattedDate}`;
+                deadlineEl.style.display = 'flex';
+            } else {
+                 deadlineEl.style.display = 'none';
+            }
+        } else {
+            deadlineEl.style.display = 'none';
+        }
+    }
 
     // Renderiza Comentários
     commentsList.innerHTML = '';
@@ -346,6 +375,7 @@ if (isReadOnly) {
             form.classList.add('new-card-form');
             form.innerHTML = `
                 <textarea placeholder="Título da tarefa..." rows="2"></textarea>
+                <input type="date" class="deadline-input" style="width: 100%; margin-bottom: 8px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" title="Definir prazo">
                 <select>
                     <option value="low">Baixa Prioridade</option>
                     <option value="medium">Média Prioridade</option>
@@ -368,17 +398,18 @@ if (isReadOnly) {
             form.querySelector('.btn-confirm').addEventListener('click', () => {
                 const title = textarea.value.trim();
                 const priority = form.querySelector('select').value;
+                const deadline = form.querySelector('.deadline-input').value;
                 
                 if (title === "") return;
 
-                createNewCardLogic(cardsContainer, title, priority, columnId);
+                createNewCardLogic(cardsContainer, title, priority, columnId, deadline);
                 form.remove();
             });
         });
     });
 }
 
-function createNewCardLogic(container, title, priority, columnId) {
+function createNewCardLogic(container, title, priority, columnId, deadline = null) {
     const cardId = `card-${Date.now()}`; 
     
     // Salva no estado global
@@ -387,13 +418,14 @@ function createNewCardLogic(container, title, priority, columnId) {
         priority: priority,
         columnId: columnId,
         comments: [], 
-        attachments: [] 
+        attachments: [],
+        deadline: deadline
     });
     
     saveData(); 
 
     // Cria visualmente
-    createCardElement(container, cardId, title, priority);
+    createCardElement(container, cardId, title, priority, [], [], deadline);
 }
 
 document.addEventListener('DOMContentLoaded', loadData);
