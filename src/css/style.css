@@ -17,12 +17,14 @@ body {
 
 .kanban {
     display: flex;
-    gap: 14px;
+    justify-content: center; 
+    gap: 20px;              
     padding: 24px;
     width: 100%;
     height: 90vh;
     overflow-x: auto;
 }
+
 
 .kanban-column {
     display: flex;
@@ -36,7 +38,7 @@ body {
     padding: 12px;
     overflow: hidden;
     position: relative;
-    min-width: 252px;
+    min-width: 280px; 
 }
 
 .kanban-column::after {
@@ -48,29 +50,16 @@ body {
     left: 0;
 }
 
-.kanban-column[data-id="1"]::after {
-    background-color: #d573b6;
-}
-
-.kanban-column[data-id="2"]::after {
-    background-color: #fea065;
-}
-
-.kanban-column[data-id="3"]::after {
-    background-color: #fed565;
-}
-
-.kanban-column[data-id="4"]::after {
-    background-color: #92a5fb;
-}
-
-.kanban-column[data-id="5"]::after {
-    background-color: #6ed0bc;
-}
+/* Cores das colunas */
+.kanban-column[data-id="1"]::after { background-color: #d573b6; } /* Backlog */
+.kanban-column[data-id="2"]::after { background-color: #fea065; } /* A Fazer */
+.kanban-column[data-id="3"]::after { background-color: #fed565; } /* Fazendo */
+.kanban-column[data-id="4"]::after { background-color: #6ed0bc; } /* Concluído */
 
 .kanban-title {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .kanban-title h2 {
@@ -81,93 +70,1053 @@ body {
 
 .add-card {
     color: #4b5563;
-    font-size: 20px;
-    background-color: transparent;
+    font-size: 18px;
+    padding: 4px 8px;
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 6px;
     cursor: pointer;
     border: none;
+    transition: background 0.2s;
+}
+
+.add-card:hover {
+    background-color: rgba(0,0,0,0.1);
 }
 
 .kanban-cards {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
+    padding-bottom: 10px;
 }
 
 .kanban-card {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     background-color: #ffffff;
     border-radius: 14px;
-    padding: 10px;
-    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.1);
+    padding: 12px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+    cursor: grab;
+    position: relative;
+    border: 1px solid transparent;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.kanban-card:hover {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.kanban-card:active {
+    cursor: grabbing;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.btn-delete {
+    background: #fee2e2;
+    border: none;
+    color: #ef4444;
     cursor: pointer;
+    opacity: 0; /* Escondido por padrão */
+    transition: opacity 0.2s;
+    padding: 6px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.kanban-card:hover .btn-delete {
+    opacity: 1; /* Aparece no hover do card */
+}
+
+.btn-delete:hover {
+    background: #fecaca;
+}
+
+.card-title {
+    font-weight: 500;
+    color: #1f2937;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
 .badge {
     color: #ffffff;
     width: fit-content;
-    font-size: 12px;
-    padding: 4px 8px;
-    border-radius: 12px;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 500;
 }
 
-.badge.high {
-    background-color: #d573b6;
-}
-
-.badge.medium {
-    background-color: #fea065;
-}
-
-.badge.low {
-    background-color: #92a5fb;
-}
+.badge.high { background-color: #ef4444; }
+.badge.medium { background-color: #f59e0b; }
+.badge.low { background-color: #3b82f6; }
 
 .card-infos {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 4px;
 }
 
 .card-icons {
     display: flex;
-    gap: 18px;
+    gap: 12px;
 }
 
-.card-icons i {
-    color: #a8a8aa;
+.card-icons p {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-size: 13px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.card-icons p:hover {
+    background-color: #f3f4f6;
+    color: #4b5563;
 }
 
 .user img {
-    width: 42px;
-    height: 42px;
+    width: 28px;
+    height: 28px;
     border-radius: 100%;
     object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #e5e7eb;
 }
 
 .dragging {
     opacity: 0.5;
+    background-color: #f9fafb;
+    border: 1px dashed #cbd5e1;
 }
 
 .cards-hover {
-    background-color: #eaeffa;
+    background-color: #eff6ff;
     border-radius: 8px;
 }
 
-*::-webkit-scrollbar {
-    width: 8px;
+/* --- MODAL GERAL --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-*::-webkit-scrollbar-track {
-    background-color: #eaeffa;
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    width: 550px;
+    max-width: 90%;
+    border-radius: 16px;
+    padding: 24px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.3s ease;
+}
+
+/* --- MODAL DELETE (Especifico) --- */
+.delete-content {
+    width: 400px;
+    text-align: center;
+}
+
+.delete-icon-area {
+    width: 60px;
+    height: 60px;
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 16px;
+}
+
+.delete-content h3 {
+    margin-bottom: 8px;
+    color: #1f2937;
+}
+
+.delete-content p {
+    color: #6b7280;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* --- MODAL DETALHES --- */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.modal-header h3 {
+    font-size: 20px;
+    color: #111827;
+}
+
+#close-modal {
+    background: #f3f4f6;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #4b5563;
+    transition: background 0.2s;
+}
+
+#close-modal:hover { background: #e5e7eb; }
+
+/* Separador Visual entre Anexos e Comentários */
+.modal-divider {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 24px 0;
+}
+
+.modal-section h4 {
+    margin-bottom: 4px;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+}
+
+.section-desc {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-bottom: 12px;
+}
+
+/* Lista de Anexos */
+#attachment-list {
+    list-style: none;
+    margin-bottom: 12px;
+}
+
+#attachment-list li {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 10px;
     border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-*::-webkit-scrollbar-thumb {
-    background-color: #b7d3fb;
+/* Lista de Comentários */
+#comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.comment-item {
+    background: #f9fafb;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    border: 1px solid #f3f4f6;
+}
+
+.comment-header {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+}
+
+.comment-input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comment-input-area textarea {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px;
+    resize: none;
+    height: 80px;
+    font-size: 14px;
+    transition: border 0.2s;
+}
+
+.comment-input-area textarea:focus {
+    outline: none;
+    border-color: #a5b4fc;
+}
+
+/* BOTOES GERAIS */
+.btn-primary {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover { background-color: #4338ca; }
+
+.btn-secondary {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover { background-color: #e5e7eb; }
+
+.btn-danger {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+.btn-danger:hover { background-color: #dc2626; }
+
+.full-width { width: 100%; }
+
+/* Form de adição de card */
+.new-card-form {
+    background-color: #fff;
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.new-card-form textarea {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px;
+    resize: none;
+}
+
+.new-card-form select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    color: #4b5563;
+    background: white;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.form-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.btn-cancel { background-color: transparent; color: #6b7280; }
+.btn-confirm { background-color: #4f46e5; color: white; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+*::-webkit-scrollbar { width: 6px; }
+*::-webkit-scrollbar-track { background-color: transparent; }
+*::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+
+/* ... MANTENHA TODO O CÓDIGO ANTERIOR DO SEU CSS AQUI ... */
+/* ... (Todo o CSS do Kanban e Modal continua igual) ... */
+
+/* --- ESTILOS ESPECÍFICOS DA TELA DE LOGIN --- */
+
+/* Fundo diferenciado para a tela de login */
+body.login-body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* A "Caixinha" do Login */
+.login-wrapper {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
     border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    max-width: 90%;
+    position: relative;
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header i {
+    font-size: 48px;
+    color: #4f46e5;
+    margin-bottom: 10px;
+}
+
+.login-header h2 {
+    color: #1f2937;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.login-header p {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* Inputs Modernos */
+.input-group {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.login-input {
+    width: 100%;
+    padding: 12px 15px;
+    padding-left: 40px; /* Espaço para o ícone */
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    background-color: #f9fafb;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.login-input:focus {
+    border-color: #4f46e5;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+/* Ícones dentro dos inputs */
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.login-input:focus + .input-icon,
+.login-input:focus ~ .input-icon {
+    color: #4f46e5;
+}
+
+/* Botão de Ação */
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, #4f46e5, #4338ca);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+/* Link de Alternar (Criar conta / Login) */
+.toggle-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.toggle-link span {
+    color: #4f46e5;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.toggle-link span:hover {
+    text-decoration: underline;
+}
+
+/* Animações de Entrada */
+.form-container {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Utilitários */
+.hidden { display: none !important; }
+
+#class-group-container.hidden { display: none; }
+
+/* ... MANTENHA TODO O CÓDIGO ANTERIOR DO SEU CSS AQUI ... */
+/* ... (Todo o CSS do Kanban, Modal e Login continua igual) ... */
+
+/* --- ESTILOS ESPECÍFICOS DA TELA DE PERFIL --- */
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+.profile-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    padding-bottom: 24px;
+}
+
+/* Fundo decorativo no topo do card */
+.profile-header-bg {
+    height: 120px;
+    background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%);
+    position: relative;
+}
+
+.profile-avatar-container {
+    margin-top: -60px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+    position: relative; /* Adicione isso para trazer o avatar para frente */
+    z-index: 10;        /* Garante que ele fique acima do fundo roxo */
+}
+
+.profile-avatar-large {
+    width: 110px;
+    height: 110px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    font-weight: 700;
+    color: #4f46e5;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 5px solid #ffffff;
+    text-transform: uppercase;
+}
+
+.profile-name {
+    font-size: 22px;
+    color: #1f2937;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.profile-role {
+    display: inline-block;
+    padding: 4px 12px;
+    background-color: #eef2ff;
+    color: #4f46e5;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Grade de Informações */
+.profile-info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 32px;
+    margin-bottom: 32px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    background-color: #f9fafb;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid #f3f4f6;
+    transition: all 0.2s ease;
+}
+
+.info-item:hover {
+    border-color: #e5e7eb;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.info-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #e0e7ff;
+    color: #4f46e5;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-right: 14px;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.info-label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.info-value {
+    font-size: 15px;
+    color: #374151;
+    font-weight: 600;
+}
+
+/* Ações / Botões */
+.profile-actions {
+    padding: 0 32px;
+    display: flex;
+    gap: 12px;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #e5e7eb;
+    color: #4b5563;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-outline:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+    color: #1f2937;
+}
+
+.btn-logout {
+    background-color: #fee2e2;
+    color: #ef4444;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-logout:hover {
+    background-color: #fecaca;
+    color: #dc2626;
+}
+
+/* ... MANTENHA TODO O CÓDIGO ANTERIOR ... */
+
+/* --- ESTILOS DO PAINEL DO PROFESSOR --- */
+
+.prof-body {
+    background-color: #f3f4f6;
+    min-height: 100vh;
+    display: block; /* Sobrescreve o flex center do body padrão */
+}
+
+/* Cabeçalho Superior */
+.prof-header {
+    background: #ffffff;
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.prof-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.prof-brand-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.prof-title h1 {
+    font-size: 18px;
+    color: #1f2937;
+    font-weight: 700;
+}
+
+.prof-title p {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* Área Principal */
+.dashboard-content {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+.dashboard-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.section-title {
+    font-size: 24px;
+    color: #111827;
+    font-weight: 600;
+}
+
+/* Barra de Pesquisa Estilizada */
+.search-container {
+    position: relative;
+    width: 350px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #e5e7eb;
+    border-radius: 50px; /* Bem arredondado */
+    background-color: white;
+    font-size: 14px;
+    transition: all 0.2s;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+/* Grid de Alunos */
+.students-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.student-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.student-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #e0e7ff;
+}
+
+.student-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.student-card-avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #eef2ff;
+    color: #4f46e5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #e0e7ff;
+}
+
+.student-info h3 {
+    font-size: 16px;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.student-info p {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* Estatísticas Compactas */
+.mini-stats {
+    display: flex;
+    justify-content: space-between;
+    background: #f9fafb;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.mini-stat-item {
+    text-align: center;
+    flex: 1;
+    position: relative;
+}
+
+.mini-stat-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 10%;
+    height: 80%;
+    width: 1px;
+    background: #e5e7eb;
+}
+
+.mini-stat-val {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.mini-stat-label {
+    font-size: 10px;
+    color: #6b7280;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+/* Botão do Card */
+.btn-inspect {
+    background-color: white;
+    color: #4f46e5;
+    border: 1px solid #4f46e5;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-inspect:hover {
+    background-color: #4f46e5;
+    color: white;
+}
+
+/* Badge de Turma */
+.class-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #4b5563;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* ... MANTENHA TODO O CÓDIGO ANTERIOR ... */
+
+/* --- ESTILOS ESPECÍFICOS DO KANBAN (Trello) --- */
+
+/* 1. Ajuste do Body para permitir cabeçalho full-width */
+.kanban-body {
+    display: flex;
+    flex-direction: column; /* Organiza itens um embaixo do outro */
+    justify-content: flex-start; /* Começa do topo */
+    align-items: stretch; /* Estica a largura */
+    background: linear-gradient(90deg, #a5b4fc, #93c5fd); /* Mantém o fundo azul */
+    min-height: 100vh;
+    overflow: hidden; /* Evita barra de rolagem dupla */
+}
+
+/* 2. O Cabeçalho Branco de fora a fora */
+.app-header {
+    background: #ffffff;
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    z-index: 50;
+    height: 70px; /* Altura fixa para cálculo do resto */
+    flex-shrink: 0;
+}
+
+.brand-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    background: #4f46e5;
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.brand-text {
+    font-size: 18px;
+    color: #4f46e5;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* 3. Ajuste do container do Kanban para ocupar o espaço restante */
+.kanban-body .kanban {
+    height: calc(100vh - 70px); /* Altura total menos a altura do header */
+    padding-top: 20px;
 }
