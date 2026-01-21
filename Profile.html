@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="src/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>Meu Perfil</title>
+</head>
+<body class="login-body"> 
+
+    <div class="profile-container">
+        <div class="profile-card">
+            
+            <div class="profile-header-bg"></div>
+
+            <div class="profile-avatar-container">
+                <div class="profile-avatar-large" id="p-avatar">U</div>
+            </div>
+
+            <h2 class="profile-name" id="p-name">Carregando...</h2>
+            <span class="profile-role" id="p-role">...</span>
+
+            <div class="profile-info-grid">
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-regular fa-envelope"></i></div>
+                    <div class="info-content">
+                        <span class="info-label">E-mail</span>
+                        <span class="info-value" id="p-email">--</span>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <div class="info-content">
+                        <span class="info-label">Turma</span>
+                        <span class="info-value" id="p-class">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn-outline" onclick="window.history.back()">
+                    <i class="fa-solid fa-arrow-left"></i> Voltar
+                </button>
+                <!-- Alterado para chamar openLogoutModal() -->
+                <button class="btn-logout" onclick="openLogoutModal()">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sair
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE LOGOUT PERSONALIZADO -->
+    <div id="logout-modal" class="modal-overlay hidden">
+        <div class="modal-content delete-content">
+            <div class="delete-icon-area">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+            <h3>Sair da Conta?</h3>
+            <p>Você será desconectado e redirecionado para a tela de login.</p>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeLogoutModal()">Cancelar</button>
+                <button class="btn-danger" onclick="confirmLogout()">Sim, Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+
+        if(!user) {
+            window.location.href = 'Login.html';
+        } else {
+            document.getElementById('p-avatar').innerText = user.avatar || user.name.charAt(0);
+            document.getElementById('p-name').innerText = user.name;
+            document.getElementById('p-role').innerText = user.role ? user.role.toUpperCase() : 'ALUNO';
+            document.getElementById('p-email').innerText = user.email;
+            document.getElementById('p-class').innerText = user.turma || 'Não informado';
+        }
+
+        // --- Novas Funções do Modal ---
+        function openLogoutModal() {
+            document.getElementById('logout-modal').classList.remove('hidden');
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logout-modal').classList.add('hidden');
+        }
+
+        function confirmLogout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'Login.html';
+        }
+    </script>
+</body>
+</html>

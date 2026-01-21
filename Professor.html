@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="src/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>Painel do Professor</title>
+</head>
+<body class="prof-body">
+    
+    <header class="prof-header">
+        <div class="prof-brand">
+            <div class="prof-brand-icon">
+                <i class="fa-solid fa-chalkboard-user"></i>
+            </div>
+            <div class="prof-title">
+                <h1 id="prof-name">Professor</h1>
+                <p>Painel Administrativo</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-secondary" onclick="window.location.href='Profile.html'" title="Meu Perfil">
+                <i class="fa-regular fa-user"></i>
+            </button>
+            <!-- Alterado para chamar openLogoutModal() -->
+            <button class="btn-logout" style="padding: 8px 16px;" onclick="openLogoutModal()">
+                <i class="fa-solid fa-right-from-bracket"></i> Sair
+            </button>
+        </div>
+    </header>
+
+    <div class="dashboard-content">
+        <div class="dashboard-controls">
+            <div>
+                <h2 class="section-title">Acompanhamento de Turmas</h2>
+                <p style="color: #6b7280; font-size: 14px;">Visualize o progresso dos seus alunos em tempo real.</p>
+            </div>
+
+            <div class="search-container">
+                <i class="fa-solid fa-search search-icon"></i>
+                <input type="text" id="search-student" class="search-input" placeholder="Buscar aluno por nome...">
+            </div>
+        </div>
+
+        <div class="students-grid" id="students-grid">
+            <!-- Cards injetados via JS -->
+        </div>
+    </div>
+
+    <!-- MODAL DE LOGOUT PERSONALIZADO -->
+    <div id="logout-modal" class="modal-overlay hidden">
+        <div class="modal-content delete-content">
+            <div class="delete-icon-area">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+            <h3>Sair da Conta?</h3>
+            <p>Você será desconectado e redirecionado para a tela de login.</p>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeLogoutModal()">Cancelar</button>
+                <button class="btn-danger" onclick="confirmLogout()">Sim, Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        if(!currentUser || currentUser.role !== 'professor') {
+            window.location.href = 'Login.html';
+        }
+        
+        document.getElementById('prof-name').innerText = currentUser.name;
+        localStorage.removeItem('inspectingUser');
+
+        // --- Funções do Modal ---
+        function openLogoutModal() {
+            document.getElementById('logout-modal').classList.remove('hidden');
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logout-modal').classList.add('hidden');
+        }
+
+        function confirmLogout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'Login.html';
+        }
+
+        // --- Lógica de Renderização dos Alunos ---
+        const allUsers = JSON.parse(localStorage.getItem('usersDB')) || [];
+        const students = allUsers.filter(u => u.role === 'aluno');
+        const grid = document.getElementById('students-grid');
+
+        function getStudentStats(studentEmail) {
+            const storageKey = `kanban_data_${studentEmail}`;
+            const rawData = localStorage.getItem(storageKey);
+            let todo = 0, doing = 0, done = 0;
+            if (rawData) {
+                const parsed = JSON.parse(rawData);
+                if(parsed.cards && Array.isArray(parsed.cards)){
+                    parsed.cards.forEach(item => {
+                        const cardData = item[1];
+                        if (cardData.columnId == 1 || cardData.columnId == 2) todo++;
+                        else if (cardData.columnId == 3) doing++;
+                        else if (cardData.columnId == 4) done++;
+                    });
+                }
+            }
+            return { todo, doing, done };
+        }
+
+        function renderStudents(filterText = '') {
+            grid.innerHTML = '';
+            const filteredStudents = students.filter(s => s.name.toLowerCase().includes(filterText.toLowerCase()));
+
+            if(filteredStudents.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #6b7280;">
+                        <i class="fa-regular fa-folder-open" style="font-size: 40px; margin-bottom: 10px;"></i>
+                        <p>Nenhum aluno encontrado.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredStudents.forEach(student => {
+                const stats = getStudentStats(student.email);
+                const avatarDisplay = student.avatar || student.name.charAt(0).toUpperCase();
+
+                const card = document.createElement('div');
+                card.className = 'student-card';
+                card.innerHTML = `
+                    <div class="student-card-header">
+                        <div class="student-card-avatar">${avatarDisplay}</div>
+                        <div class="student-info">
+                            <h3>${student.name}</h3>
+                            <span class="class-badge">${student.turma || 'Sem turma'}</span>
+                            <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">${student.email}</div>
+                        </div>
+                    </div>
+                    <div class="mini-stats">
+                        <div class="mini-stat-item">
+                            <div class="mini-stat-val" style="color: #f59e0b;">${stats.todo}</div>
+                            <div class="mini-stat-label">Pendentes</div>
+                        </div>
+                        <div class="mini-stat-item">
+                            <div class="mini-stat-val" style="color: #3b82f6;">${stats.doing}</div>
+                            <div class="mini-stat-label">Andamento</div>
+                        </div>
+                        <div class="mini-stat-item">
+                            <div class="mini-stat-val" style="color: #10b981;">${stats.done}</div>
+                            <div class="mini-stat-label">Feitas</div>
+                        </div>
+                    </div>
+                    <button class="btn-inspect" onclick="inspectStudent('${student.email}')">
+                        <i class="fa-solid fa-eye"></i> Acessar Kanban
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        document.getElementById('search-student').addEventListener('input', (e) => {
+            renderStudents(e.target.value);
+        });
+
+        renderStudents();
+
+        function inspectStudent(email) {
+            localStorage.setItem('inspectingUser', email);
+            window.location.href = 'Trello.html';
+        }
+    </script>
+</body>
+</html>

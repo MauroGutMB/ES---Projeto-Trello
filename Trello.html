@@ -4,237 +4,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="src/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <title>Kanban</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>Kanban - Gerenciamento</title>
 </head>
-<body>
+<!-- Adicionada a classe 'kanban-body' aqui -->
+<body class="kanban-body">
+
+    <!-- Cabeçalho Full Width (De fora a fora) -->
+    <header class="app-header">
+        <div class="brand-area">
+            <div class="brand-icon">
+                <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <h1 class="brand-text">Project Manager</h1>
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+            <!-- Botão Voltar (Aparece só para professor) -->
+            <button id="btn-back-prof" class="btn-secondary hidden" onclick="window.location.href='Professor.html'">
+                <i class="fa-solid fa-arrow-left"></i> <span style="margin-left: 5px;">Painel Professor</span>
+            </button>
+            
+            <!-- Botão Perfil (Aparece só para aluno) -->
+            <button id="btn-profile" class="btn-primary" onclick="window.location.href='Profile.html'" style="display: flex; align-items: center; gap: 8px;">
+                <i class="fa-regular fa-user"></i> Meu Perfil
+            </button>
+        </div>
+    </header>
+
+    <script>
+        // Lógica de exibição dos botões
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        if(user && user.role === 'professor') {
+            document.getElementById('btn-back-prof').classList.remove('hidden');
+            document.getElementById('btn-profile').classList.add('hidden');
+        }
+    </script>
+
     <main class="kanban">
-        <!-- COLUMN 1 -->
+        <!-- COLUMN 1: Backlog -->
         <div class="kanban-column" data-id="1">
             <div class="kanban-title">
-                <h2>
-                    Pendente
-                </h2>
-
-                <button class="add-card">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
+                <h2>Backlog</h2>
+                <button class="add-card"><i class="fa-solid fa-plus"></i></button>
             </div>
-
             <div class="kanban-cards">
-                <div class="kanban-card" draggable="true">
-                    <div class="badge medium">
-                        <span>
-                            Média prioridade
-                        </span>
-                    </div>
-
-                    <p class="card-title">
-                        Revisar documento do projeto
-                    </p>
-
-                    <div class="card-infos">
-                        <div class="card-icons">
-                            <p>
-                                <i class="fa-regular fa-comment"></i>
-                                1
-                            </p>
-
-                            <p>
-                                <i class="fa-solid fa-paperclip"></i>
-                                1
-                            </p>
-                        </div>
-
-                        <div class="user">
-                            <img src="src/imagens/avatar2.png" alt="Avatar">
-                        </div>
-                    </div>
-                </div>
+                <!-- Cards via JS -->
             </div>
         </div>
 
-        <!-- COLUMN 2 -->
+        <!-- COLUMN 2: A Fazer -->
         <div class="kanban-column" data-id="2">
             <div class="kanban-title">
-                <h2>
-                    Em front-end
-                </h2>
-
-                <button class="add-card">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
+                <h2>A Fazer</h2>
+                <button class="add-card"><i class="fa-solid fa-plus"></i></button>
             </div>
-
-            <div class="kanban-cards">
-                <div class="kanban-card" draggable="true">
-                    <div class="badge high">
-                        <span>
-                            Alta prioridade
-                        </span>
-                    </div>
-
-                    <p class="card-title">
-                        Revisar documento do projeto
-                    </p>
-
-                    <div class="card-infos">
-                        <div class="card-icons">
-                            <p>
-                                <i class="fa-regular fa-comment"></i>
-                                1
-                            </p>
-
-                            <p>
-                                <i class="fa-solid fa-paperclip"></i>
-                                1
-                            </p>
-                        </div>
-
-                        <div class="user">
-                            <img src="src/imagens/avatar3.png" alt="Avatar">
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="kanban-cards"></div>
         </div>
 
-        <!-- COLUMN 3 -->
+        <!-- COLUMN 3: Fazendo -->
         <div class="kanban-column" data-id="3">
             <div class="kanban-title">
-                <h2>
-                    Em back-end
-                </h2>
-
-                <button class="add-card">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
+                <h2>Fazendo</h2>
+                <button class="add-card"><i class="fa-solid fa-plus"></i></button>
             </div>
-
-            <div class="kanban-cards">
-                <div class="kanban-card" draggable="true">
-                    <div class="badge low">
-                        <span>
-                            Baixa prioridade
-                        </span>
-                    </div>
-
-                    <p class="card-title">
-                        Revisar documento do projeto
-                    </p>
-
-                    <div class="card-infos">
-                        <div class="card-icons">
-                            <p>
-                                <i class="fa-regular fa-comment"></i>
-                                1
-                            </p>
-
-                            <p>
-                                <i class="fa-solid fa-paperclip"></i>
-                                1
-                            </p>
-                        </div>
-
-                        <div class="user">
-                            <img src="src/imagens/avatar2.png" alt="Avatar">
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="kanban-cards"></div>
         </div>
 
-        <!-- COLUMN 4 -->
+        <!-- COLUMN 4: Concluído -->
         <div class="kanban-column" data-id="4">
             <div class="kanban-title">
-                <h2>
-                    Em teste
-                </h2>
-
-                <button class="add-card">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
+                <h2>Concluído</h2>
+                <button class="add-card"><i class="fa-solid fa-plus"></i></button>
             </div>
-
-            <div class="kanban-cards">
-                <div class="kanban-card" draggable="true">
-                    <div class="badge high">
-                        <span>
-                            Alta prioridade
-                        </span>
-                    </div>
-
-                    <p class="card-title">
-                        Revisar documento do projeto
-                    </p>
-
-                    <div class="card-infos">
-                        <div class="card-icons">
-                            <p>
-                                <i class="fa-regular fa-comment"></i>
-                                1
-                            </p>
-
-                            <p>
-                                <i class="fa-solid fa-paperclip"></i>
-                                1
-                            </p>
-                        </div>
-
-                        <div class="user">
-                            <img src="src/imagens/avatar3.png" alt="Avatar">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- COLUMN 5 -->
-        <div class="kanban-column" data-id="5">
-            <div class="kanban-title">
-                <h2>
-                    Concluído
-                </h2>
-
-                <button class="add-card">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-
-            <div class="kanban-cards">
-                <div class="kanban-card" draggable="true">
-                    <div class="badge high">
-                        <span>
-                            Alta prioridade
-                        </span>
-                    </div>
-
-                    <p class="card-title">
-                        Revisar documento do projeto
-                    </p>
-
-                    <div class="card-infos">
-                        <div class="card-icons">
-                            <p>
-                                <i class="fa-regular fa-comment"></i>
-                                1
-                            </p>
-
-                            <p>
-                                <i class="fa-solid fa-paperclip"></i>
-                                1
-                            </p>
-                        </div>
-
-                        <div class="user">
-                            <img src="src/imagens/avatar3.png" alt="Avatar">
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="kanban-cards"></div>
         </div>
     </main>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="delete-modal" class="modal-overlay hidden">
+        <div class="modal-content delete-content">
+            <div class="delete-icon-area">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3>Excluir Tarefa?</h3>
+            <p>Você tem certeza que deseja excluir esta tarefa? Essa ação não pode ser desfeita.</p>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="btn-cancel-delete">Cancelar</button>
+                <button class="btn-danger" id="btn-confirm-delete">Sim, excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes -->
+    <div id="card-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-card-title">Título do Card</h3>
+                <button id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="modal-section attachments-section">
+                    <h4><i class="fa-solid fa-paperclip"></i> Anexos</h4>
+                    <p class="section-desc">Arquivos relevantes para esta tarefa.</p>
+                    
+                    <ul id="attachment-list"></ul>
+                    
+                    <input type="file" id="file-input" hidden>
+                    <button class="btn-secondary full-width" id="btn-add-attachment">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Carregar anexo
+                    </button>
+                </div>
+
+                <hr class="modal-divider">
+
+                <div class="modal-section comments-section">
+                    <h4><i class="fa-regular fa-comment"></i> Comentários</h4>
+                    <p class="section-desc">Discussão da tarefa.</p>
+                    
+                    <div id="comments-list"></div>
+                    
+                    <div class="comment-input-area">
+                        <textarea id="new-comment-text" placeholder="Escreva um comentário..."></textarea>
+                        <button class="btn-primary" id="btn-save-comment">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="src/script/script.js"></script>
 </body>
